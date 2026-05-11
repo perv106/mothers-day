@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🌸 Creator — Mother's Day</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Pacifico&family=Indie+Flower&family=Nothing+You+Could+Do&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDOlVmUfyb1ZdRhgGtS6-hNo8VjrAleSm0",
+    authDomain: "mothers-day-8d777.firebaseapp.com",
+    databaseURL: "https://mothers-day-8d777-default-rtdb.firebaseio.com",
+    projectId: "mothers-day-8d777",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+<style>
+:root {
+  --blush:#f9c6cf;--rose:#e8738a;--mauve:#c4688f;--cream:#fdf6ee;
+  --gold:#e8a04a;--sage:#8bab8e;--ink:#3a2a2a;--lav:#d4b8e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:'Caveat',cursive;color:var(--ink);min-height:100vh;}
+
+/* TOP BAR */
+#topbar{
+  background:var(--mauve);color:#fff;padding:.7rem 1.2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.5rem;position:sticky;top:0;z-index:100;
+  box-shadow:0 3px 0 #9a4a70;
+}
+#topbar h1{font-family:'Pacifico',cursive;font-size:1.3rem;}
+#topbar .btns{display:flex;gap:.6rem;flex-wrap:wrap;}
+.topbtn{
+  padding:.45rem 1rem;border-radius:20px;border:2px solid #fff;
+  background:transparent;color:#fff;font-family:'Caveat',cursive;font-size:1rem;
+  cursor:pointer;transition:background .2s,color .2s;
+}
+.topbtn:hover{background:#fff;color:var(--mauve);}
+.topbtn.primary{background:#fff;color:var(--mauve);}
+.topbtn.primary:hover{background:var(--blush);border-color:var(--blush);}
+
+/* TABS */
+#tabs{display:flex;gap:0;background:#fff;border-bottom:2.5px solid var(--blush);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tab{
+  padding:.7rem 1.2rem;font-family:'Pacifico',cursive;font-size:.95rem;
+  color:var(--mauve);border:none;background:transparent;cursor:pointer;
+  white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;
+}
+.tab.active{border-bottom-color:var(--rose);color:var(--rose);}
+.tab:hover{background:var(--blush);}
+
+/* PANELS */
+.panel{display:none;padding:1.2rem 1rem;max-width:700px;margin:0 auto;}
+.panel.active{display:block;}
+
+/* CARDS */
+.card{
+  background:#fff;border-radius:18px;padding:1.2rem 1rem;margin-bottom:1.2rem;
+  border:2px solid var(--blush);box-shadow:3px 4px 0 var(--lav);
+}
+.card h2{font-family:'Pacifico',cursive;font-size:1.1rem;color:var(--mauve);margin-bottom:.8rem;}
+
+/* UPLOAD */
+.upload-zone{
+  border:3px dashed var(--rose);border-radius:16px;padding:1.5rem 1rem;
+  text-align:center;cursor:pointer;background:#fff8f9;transition:background .2s;
+}
+.upload-zone:hover{background:#ffe8ed;}
+.upload-zone p{font-size:1.1rem;color:var(--rose);}
+
+/* PHOTO GRID */
+#photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;margin-top:1rem;}
+.photo-item{
+  border-radius:12px;overflow:hidden;border:2.5px solid var(--blush);
+  box-shadow:2px 3px 0 var(--lav);background:#fff;position:relative;
+}
+.photo-item img{width:100%;height:110px;object-fit:cover;display:block;}
+.photo-item textarea{
+  width:100%;border:none;outline:none;padding:.4rem .5rem;
+  font-family:'Nothing You Could Do',cursive;font-size:1rem;color:var(--mauve);
+  resize:none;background:#fff8f9;min-height:44px;border-top:1.5px dashed var(--blush);
+}
+.photo-item .del-btn{
+  position:absolute;top:4px;right:4px;
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(255,255,255,.9);border:1.5px solid var(--rose);
+  color:var(--rose);font-size:.85rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* LETTER */
+.letter-paper{
+  background:#fffef5;border-radius:14px;padding:1.2rem 1rem;
+  border:2px solid #e8d8a0;
+  background-image:repeating-linear-gradient(transparent,transparent 31px,#e8d8a0 31px,#e8d8a0 32px);
+  position:relative;overflow:hidden;
+}
+.letter-paper::before{content:'';position:absolute;left:46px;top:0;bottom:0;width:2px;background:#f4a5b0;}
+.letter-paper textarea{
+  width:100%;background:transparent;border:none;outline:none;
+  font-family:'Nothing You Could Do',cursive;font-size:1.2rem;
+  color:var(--ink);line-height:2;resize:none;min-height:160px;padding-left:18px;
+}
+.trans-btn{
+  display:block;width:100%;margin:.7rem 0 0;
+  background:var(--mauve);color:#fff;border:none;border-radius:30px;
+  padding:.7rem;font-family:'Pacifico',cursive;font-size:.95rem;cursor:pointer;
+  box-shadow:3px 4px 0 #9a4a70;transition:transform .15s;
+}
+.trans-btn:active{transform:translateY(2px);}
+#hindi-out{
+  margin-top:.7rem;font-family:'Noto Sans Devanagari','Caveat',sans-serif;
+  font-size:1.2rem;line-height:1.8;color:var(--mauve);background:#fff;
+  border-radius:10px;padding:.7rem 1rem;border:1.5px dashed var(--lav);
+  display:none;white-space:pre-wrap;
+}
+.copy-btn{
+  background:var(--sage);color:#fff;border:none;border-radius:20px;
+  padding:.35rem 1rem;font-family:'Caveat',cursive;font-size:1rem;cursor:pointer;margin-top:.5rem;display:none;
+}
+.trans-note{font-size:.9rem;color:var(--sage);margin-top:.4rem;text-align:center;}
+
+/* DOODLE */
+#doodle-canvas{display:block;width:100%;touch-action:none;background:#fff;cursor:crosshair;border-radius:0 0 14px 14px;}
+.doodle-controls{display:flex;flex-wrap:wrap;gap:.5rem;padding:.7rem .8rem;border-top:2px solid #eee;align-items:center;background:#fafafa;border-radius:14px 14px 0 0;}
+.swatch{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:border-color .2s,transform .2s;}
+.swatch.sel{border-color:var(--ink);transform:scale(1.2);}
+.dbtn{
+  padding:.3rem .8rem;border-radius:20px;border:2px solid var(--rose);
+  background:#fff;color:var(--rose);font-family:'Caveat',cursive;font-size:.95rem;cursor:pointer;transition:background .2s,color .2s;
+}
+.dbtn:hover{background:var(--rose);color:#fff;}
+
+/* WISHES */
+.wish-row{display:flex;gap:.5rem;margin-bottom:.8rem;}
+.wish-input{
+  flex:1;border:2.5px solid var(--blush);border-radius:30px;
+  padding:.5rem 1rem;font-family:'Caveat',cursive;font-size:1.05rem;color:var(--ink);outline:none;
+}
+.wish-input:focus{border-color:var(--rose);}
+.add-btn{
+  background:var(--rose);color:#fff;border:none;border-radius:30px;
+  padding:.5rem 1.1rem;font-family:'Pacifico',cursive;font-size:.9rem;cursor:pointer;
+}
+.hearts-grid{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;}
+.hcard{
+  background:var(--blush);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  width:95px;height:90px;display:flex;align-items:center;justify-content:center;
+  text-align:center;font-family:'Indie Flower',cursive;font-size:.8rem;color:var(--mauve);
+  padding:.8rem .5rem;box-shadow:2px 3px 0 var(--rose);word-break:break-word;
+  cursor:pointer;animation:hpop .4s cubic-bezier(.175,.885,.32,1.275) both;
+  position:relative;transition:transform .2s;
+}
+.hcard:hover{transform:scale(1.08) rotate(-2deg);}
+@keyframes hpop{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1);opacity:1}}
+.hcard .x{
+  position:absolute;top:-5px;right:-5px;width:18px;height:18px;
+  border-radius:50%;background:var(--rose);color:#fff;font-size:.7rem;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+
+/* PREVIEW LINK */
+#link-box{background:var(--blush);border-radius:14px;padding:1rem;text-align:center;}
+#link-box p{font-size:1rem;color:var(--mauve);margin-bottom:.5rem;}
+#link-box code{
+  display:block;background:#fff;border-radius:8px;padding:.4rem .6rem;
+  font-size:.85rem;word-break:break-all;margin:.5rem 0;color:var(--ink);border:1.5px dashed var(--rose);
+}
+.open-btn{
+  background:var(--mauve);color:#fff;border:none;border-radius:20px;
+  padding:.5rem 1.3rem;font-family:'Pacifico',cursive;font-size:1rem;cursor:pointer;
+  box-shadow:3px 4px 0 #9a4a70;
+}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(40px);
+  background:var(--mauve);color:#fff;padding:.6rem 1.4rem;border-radius:30px;
+  font-family:'Pacifico',cursive;font-size:.95rem;opacity:0;transition:all .4s;pointer-events:none;z-index:999;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>🌸 Creator Mode</h1>
+  <div class="btns">
+    <button class="topbtn" onclick="saveAll()">💾 Save</button>
+    <button class="topbtn primary" onclick="openViewer()">👁 Preview Viewer →</button>
+  </div>
+</div>
+
+<div id="tabs">
+  <button class="tab active" onclick="openTab('photos',this)">📸 Photos</button>
+  <button class="tab" onclick="openTab('letter',this)">💌 Letter</button>
+  <button class="tab" onclick="openTab('doodle',this)">🎨 Doodle</button>
+  <button class="tab" onclick="openTab('wishes',this)">💝 Wishes</button>
+  <button class="tab" onclick="openTab('link',this)">🔗 Share</button>
+</div>
+
+<!-- PHOTOS TAB -->
+<div class="panel active" id="panel-photos">
+  <div class="card">
+    <h2>Upload your photos 📷</h2>
+    <div class="upload-zone" onclick="document.getElementById('file-in').click()">
+      <input type="file" id="file-in" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)"/>
+      <p>📷 Tap to add photos</p>
+      <p style="font-size:.9rem;color:#bbb;">(select multiple at once!)</p>
+    </div>
+    <div id="photo-grid"></div>
+  </div>
+  <p style="text-align:center;font-size:1rem;color:var(--sage);">Add a caption under each photo — your maa will see it 💕</p>
+</div>
+
+<!-- LETTER TAB -->
+<div class="panel" id="panel-letter">
+  <div class="card">
+    <h2>Write your letter 💌</h2>
+    <div class="letter-paper">
+      <textarea id="letter-en" rows="8" placeholder="Dear Maa…">Dear Maa,
+
+Words feel small for everything you are to me. Your hugs are home. Thank you for every sacrifice you made with a smile. I love you more than you'll ever know.
+
+Forever yours 🌸</textarea>
+    </div>
+    <button class="trans-btn" onclick="translateLetter('en','hi','letter-en','hindi-out','copy-en')">🌸 Translate my letter → Hindi</button>
+    <p class="trans-note">Type in English above, get Hindi below!</p>
+    <div id="hindi-out"></div>
+    <button class="copy-btn" id="copy-en" onclick="copyText('hindi-out','copy-en')">📋 Copy Hindi</button>
+  </div>
+
+  <div class="card">
+    <h2>Type in Hindi too 🌺</h2>
+    <div class="letter-paper">
+      <textarea id="letter-hi" rows="6" placeholder="हिंदी में लिखें या यहाँ पेस्ट करें…"></textarea>
+    </div>
+    <button class="trans-btn" onclick="translateLetter('hi','en','letter-hi','eng-out','copy-hi')">✨ Translate Hindi → English</button>
+    <div id="eng-out" style="margin-top:.7rem;font-family:'Nothing You Could Do',cursive;font-size:1.2rem;line-height:1.8;color:var(--mauve);background:#fff;border-radius:10px;padding:.7rem 1rem;border:1.5px dashed var(--lav);display:none;white-space:pre-wrap;"></div>
+    <button class="copy-btn" id="copy-hi" onclick="copyText('eng-out','copy-hi')">📋 Copy English</button>
+  </div>
+</div>
+
+<!-- DOODLE TAB -->
+<div class="panel" id="panel-doodle">
+  <div class="card">
+    <h2>Draw for Maa 🎨</h2>
+    <div style="border-radius:14px;overflow:hidden;border:2px solid var(--sage);box-shadow:3px 4px 0 var(--sage);">
+      <div class="doodle-controls">
+        <span style="font-size:.9rem;color:var(--mauve);">Color:</span>
+        <div class="swatch sel" style="background:#e8738a" data-c="#e8738a" onclick="setC(this)"></div>
+        <div class="swatch" style="background:#c4688f" data-c="#c4688f" onclick="setC(this)"></div>
+        <div class="swatch" style="background:#8bab8e" data-c="#8bab8e" onclick="setC(this)"></div>
+        <div class="swatch" style="background:#e8a04a" data-c="#e8a04a" onclick="setC(this)"></div>
+        <div class="swatch" style="background:#d4b8e0" data-c="#d4b8e0" onclick="setC(this)"></div>
+        <div class="swatch" style="background:#3a2a2a" data-c="#3a2a2a" onclick="setC(this)"></div>
+        <div class="swatch" style="background:#fff;border:2px solid #ccc" data-c="#fff" onclick="setC(this)" title="Eraser"></div>
+        <input type="range" min="2" max="24" value="4" id="brush" oninput="bSize=+this.value" style="width:80px;"/>
+        <button class="dbtn" onclick="clearDoodle()">Clear</button>
+        <button class="dbtn" onclick="saveDoodle()">💾 Save PNG</button>
+      </div>
+      <canvas id="doodle-canvas" height="280"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- WISHES TAB -->
+<div class="panel" id="panel-wishes">
+  <div class="card">
+    <h2>Add wishes 💝</h2>
+    <div class="wish-row">
+      <input class="wish-input" id="wish-in" type="text" maxlength="55" placeholder="e.g. Always stay healthy ✨" onkeydown="if(event.key==='Enter')addWish()"/>
+      <button class="add-btn" onclick="addWish()">+ Add</button>
+    </div>
+    <div class="hearts-grid" id="hearts"></div>
+  </div>
+</div>
+
+<!-- SHARE TAB -->
+<div class="panel" id="panel-link">
+  <div class="card">
+    <h2>Share with Maa 🔗</h2>
+    <p style="font-size:1.05rem;margin-bottom:1rem;color:var(--ink);">
+      Save your work first, then open the viewer file — it reads everything you created!
+    </p>
+    <div id="link-box">
+      <p>📄 Open the viewer file on your phone or send it:</p>
+      <code>mothers-day-viewer.html</code>
+      <p style="font-size:.9rem;color:var(--mauve);">Both files must be in the same folder.<br/>Your maa opens the viewer — you keep the creator!</p>
+      <br/>
+      <button class="open-btn" onclick="openViewer()">Open Viewer Now 🌸</button>
+    </div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <h2>Auto-Save Status</h2>
+    <p id="save-status" style="font-size:1.1rem;color:var(--sage);">Not saved yet — tap 💾 Save above!</p>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const uid = new URLSearchParams(location.search).get('id') 
+  || Math.random().toString(36).slice(2,8);
+history.replaceState(null,'',`?id=${uid}`);
+
+/* ── TABS ── */
+function openTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  el.classList.add('active');
+  if (name === 'doodle') resizeDoodle();
+}
+
+/* ── TOAST ── */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── PHOTOS ── */
+let photos = []; // [{dataUrl, caption}]
+
+function handlePhotos(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(f => {
+    const r = new FileReader();
+    r.onload = ev => {
+      photos.push({ dataUrl: ev.target.result, caption: '' });
+      renderGrid();
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = '';
+  photos.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'photo-item';
+    div.innerHTML = `
+      <button class="del-btn" onclick="deletePhoto(${i})">✕</button>
+      <img src="${p.dataUrl}" alt="Photo ${i+1}" loading="lazy"/>
+      <textarea placeholder="Caption…" onchange="photos[${i}].caption=this.value">${p.caption}</textarea>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function deletePhoto(i) {
+  photos.splice(i, 1);
+  renderGrid();
+}
+
+/* ── LETTER ── */
+async function translateLetter(fromLang, toLang, srcId, outId, btnId) {
+  const text = document.getElementById(srcId).value.trim();
+  if (!text) { toast('Write something first! 💕'); return; }
+  const outEl = document.getElementById(outId);
+  const btnEl = document.getElementById(btnId);
+  outEl.style.display = 'none';
+  btnEl.style.display = 'none';
+  toast('Translating… 🌸');
+  const dir = fromLang === 'en' ? 'English to Hindi (Devanagari script)' : 'Hindi to English';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+        messages: [{ role: 'user', content: `Translate the following text from ${dir}. Preserve the emotional warmth and poetic tone. Return ONLY the translation, nothing else.\n\n${text}` }]
+      })
+    });
+    const data = await resp.json();
+    const result = data.content?.map(c => c.text || '').join('') || 'Error — try again.';
+    outEl.textContent = result;
+    outEl.style.display = 'block';
+    btnEl.style.display = 'inline-block';
+  } catch { outEl.textContent = 'Translation failed. Check connection.'; outEl.style.display = 'block'; }
+}
+
+function copyText(srcId, btnId) {
+  navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(() => {
+    const btn = document.getElementById(btnId);
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy', 2000);
+  });
+}
+
+/* ── DOODLE ── */
+let painting = false, bColor = '#e8738a', bSize = 4, dCtx;
+
+function initDoodle() {
+  const c = document.getElementById('doodle-canvas');
+  c.width = c.offsetWidth || 300;
+  dCtx = c.getContext('2d');
+  dCtx.lineCap = 'round'; dCtx.lineJoin = 'round';
+
+  const pos = e => {
+    const r = c.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  };
+  c.addEventListener('mousedown', e => { painting = true; const p = pos(e); dCtx.beginPath(); dCtx.moveTo(p.x, p.y); });
+  c.addEventListener('mousemove', e => { if (!painting) return; const p = pos(e); dCtx.strokeStyle = bColor; dCtx.lineWidth = bSize; dCtx.lineTo(p.x, p.y); dCtx.stroke(); });
+  c.addEventListener('mouseup', () => painting = false);
+  c.addEventListener('mouseleave', () => painting = false);
+  c.addEventListener('touchstart', e => { e.preventDefault(); painting = true; const p = pos(e); dCtx.beginPath(); dCtx.moveTo(p.x, p.y); }, { passive: false });
+  c.addEventListener('touchmove', e => { e.preventDefault(); if (!painting) return; const p = pos(e); dCtx.strokeStyle = bColor; dCtx.lineWidth = bSize; dCtx.lineTo(p.x, p.y); dCtx.stroke(); }, { passive: false });
+  c.addEventListener('touchend', () => painting = false);
+}
+
+function setC(el) {
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('sel'));
+  el.classList.add('sel'); bColor = el.dataset.c;
+}
+function clearDoodle() { const c = document.getElementById('doodle-canvas'); dCtx.clearRect(0, 0, c.width, c.height); }
+function saveDoodle() { const a = document.createElement('a'); a.download = 'doodle-maa.png'; a.href = document.getElementById('doodle-canvas').toDataURL(); a.click(); }
+function resizeDoodle() {
+  const c = document.getElementById('doodle-canvas');
+  const snap = c.toDataURL(); c.width = c.offsetWidth || 300;
+  const img = new Image(); img.src = snap; img.onload = () => dCtx.drawImage(img, 0, 0);
+}
+
+/* ── WISHES ── */
+let wishes = ['Always stay healthy 🌿', 'Smile every day 😊', 'Rest well, you deserve it 💤', 'May every wish come true ✨'];
+
+function addWish() {
+  const inp = document.getElementById('wish-in');
+  const t = inp.value.trim(); if (!t) return;
+  wishes.push(t); inp.value = '';
+  renderWishes();
+}
+
+function deleteWish(i) { wishes.splice(i, 1); renderWishes(); }
+
+function renderWishes() {
+  const g = document.getElementById('hearts');
+  g.innerHTML = '';
+  wishes.forEach((w, i) => {
+    const d = document.createElement('div');
+    d.className = 'hcard';
+    d.innerHTML = `<span class="x" onclick="deleteWish(${i})">✕</span>${w}`;
+    g.appendChild(d);
+  });
+}
+
+/* ── SAVE / LOAD (Firebase) ── */
+function saveAll() {
+  const doodleData = document.getElementById('doodle-canvas').toDataURL();
+  const savedAt = new Date().toLocaleString();
+  const data = {
+    photos,
+    letterEn: document.getElementById('letter-en').value,
+    letterHi: document.getElementById('letter-hi').value,
+    doodle: doodleData,
+    wishes,
+    savedAt
+  };
+  db.ref('mday/' + uid).set(data)
+    .then(() => {
+      document.getElementById('save-status').textContent = '✅ Saved at ' + savedAt + ' — Maa can see it now!';
+      toast('Saved! 💾 Maa sees it live!');
+    })
+    .catch(err => {
+      console.error(err);
+      toast('Save failed — check Firebase config 😥');
+    });
+}
+
+function loadAll() {
+ db.ref('mday/' + uid).once('value').then(snap => {
+    const data = snap.val();
+    if (!data) return;
+    if (data.photos) { photos = data.photos; renderGrid(); }
+    if (data.letterEn) document.getElementById('letter-en').value = data.letterEn;
+    if (data.letterHi) document.getElementById('letter-hi').value = data.letterHi;
+    if (data.wishes) { wishes = data.wishes; renderWishes(); }
+    if (data.doodle) {
+      const img = new Image(); img.src = data.doodle;
+      img.onload = () => { if (dCtx) dCtx.drawImage(img, 0, 0); };
+    }
+    if (data.savedAt) document.getElementById('save-status').textContent = '✅ Last saved: ' + data.savedAt;
+  }).catch(err => console.log('load error', err));
+}
+
+function openViewer() {
+  saveAll();
+  window.open('mothers-day-viewer.html', '_blank');
+}
+
+window.addEventListener('load', () => {
+  initDoodle();
+  renderWishes();
+  loadAll();
+});
+window.addEventListener('resize', () => {
+  if (document.getElementById('panel-doodle').classList.contains('active')) resizeDoodle();
+});
+</script>
+</body>
+</html>
